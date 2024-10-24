@@ -249,6 +249,11 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 	}
 }
 
+void CMenus::RenderSettingsPlugins(CUIRect MainView)
+{
+	Ui()->DoLabel(&MainView, Localize("TODO"), 30.0f, TEXTALIGN_MC);
+}
+
 void CMenus::SetNeedSendInfo()
 {
 	if(m_Dummy)
@@ -1941,7 +1946,8 @@ void CMenus::RenderSettings(CUIRect MainView)
 		Localize("Graphics"),
 		Localize("Sound"),
 		Localize("DDNet"),
-		Localize("Assets")};
+		Localize("Assets"),
+		Localize("Plugins")};
 	static CButtonContainer s_aTabButtons[SETTINGS_LENGTH];
 
 	for(int i = 0; i < SETTINGS_LENGTH; i++)
@@ -2004,6 +2010,11 @@ void CMenus::RenderSettings(CUIRect MainView)
 	{
 		GameClient()->m_MenuBackground.ChangePosition(CMenuBackground::POS_SETTINGS_ASSETS);
 		RenderSettingsCustom(MainView);
+	}
+	else if(g_Config.m_UiSettingsPage == SETTINGS_PLUGINS)
+	{
+		GameClient()->m_MenuBackground.ChangePosition(CMenuBackground::POS_SETTINGS_PLUGINS);
+		RenderSettingsPlugins(MainView);
 	}
 	else
 	{

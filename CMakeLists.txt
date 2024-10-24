@@ -531,6 +531,7 @@ find_package(Python3)
 find_package(Rust)
 find_package(SDL2)
 find_package(SQLite3)
+find_package(Lua)
 if(DISCORD)
   find_package(DiscordSdk)
 endif()
@@ -623,6 +624,7 @@ show_dependency_status("PNG" PNG)
 show_dependency_status("Python3" Python3)
 show_dependency_status("SDL2" SDL2)
 show_dependency_status("SQLite3" SQLite3)
+show_dependency_status("Lua" LUA)
 show_dependency_status("Wavpack" WAVPACK)
 show_dependency_status("Zlib" ZLIB)
 if(DISCORD)
@@ -647,6 +649,9 @@ if(NOT(RUST_FOUND))
 endif()
 if(NOT(SQLite3_FOUND))
   message(SEND_ERROR "You must install SQLite3 to compile ${CMAKE_PROJECT_NAME}")
+endif()
+if(NOT(LUA_FOUND))
+  message(SEND_ERROR "You must install Lua to compile ${CMAKE_PROJECT_NAME}")
 endif()
 
 if(MYSQL AND NOT(MYSQL_FOUND))
@@ -1876,6 +1881,7 @@ set(COPY_FILES
   ${PNG_COPY_FILES}
   ${SDL2_COPY_FILES}
   ${SQLite3_COPY_FILES}
+  ${LUA_COPY_FILES}
   ${FFMPEG_COPY_FILES}
   ${WEBSOCKETS_COPY_FILES}
   ${DISCORDSDK_COPY_FILES}
@@ -2209,6 +2215,7 @@ set(LIBS
   ${CRYPTO_LIBRARIES}
   ${CURL_LIBRARIES}
   ${SQLite3_LIBRARIES}
+  ${LUA_LIBRARIES}
   ${WEBSOCKETS_LIBRARIES}
   ${ZLIB_LIBRARIES}
   ${PLATFORM_LIBS}
@@ -2405,6 +2412,8 @@ if(CLIENT)
     components/tooltips.h
     components/voting.cpp
     components/voting.h
+	components/lua.cpp
+    components/lua.h
     gameclient.cpp
     gameclient.h
     laser_data.cpp
@@ -3548,7 +3557,7 @@ foreach(target ${TARGETS_OWN})
   target_include_directories(${target} PRIVATE src)
   target_include_directories(${target} PRIVATE src/rust-bridge)
   target_compile_definitions(${target} PRIVATE $<$<CONFIG:Debug>:CONF_DEBUG>)
-  target_include_directories(${target} SYSTEM PRIVATE ${CURL_INCLUDE_DIRS} ${SQLite3_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
+  target_include_directories(${target} SYSTEM PRIVATE ${CURL_INCLUDE_DIRS} ${SQLite3_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${LUA_INCLUDE_DIRS})
   target_compile_definitions(${target} PRIVATE GLEW_STATIC)
   if(CRYPTO_FOUND)
     target_compile_definitions(${target} PRIVATE CONF_OPENSSL)

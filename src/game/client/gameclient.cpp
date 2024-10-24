@@ -118,6 +118,7 @@ void CGameClient::OnConsoleInit()
 					      &m_Effects, // doesn't render anything, just updates effects
 					      &m_Binds,
 					      &m_Binds.m_SpecialBinds,
+						  &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_FIRST],
 					      &m_Controls,
 					      &m_Camera,
 					      &m_Sounds,
@@ -127,18 +128,22 @@ void CGameClient::OnConsoleInit()
 					      &m_MapSounds,
 					      &m_Background, // render instead of m_MapLayersBackground when g_Config.m_ClOverlayEntities == 100
 					      &m_MapLayersBackground, // first to render
+						  &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_ABOVE_BACKGROUND],
 					      &m_Particles.m_RenderTrail,
 					      &m_Particles.m_RenderTrailExtra,
 					      &m_Items,
 					      &m_Ghost,
 					      &m_Players,
+						  &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_ABOVE_PLAYERS],
 					      &m_MapLayersForeground,
+					      &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_ABOVE_FOREGROUND],
 					      &m_Particles.m_RenderExplosions,
 					      &m_NamePlates,
 					      &m_Particles.m_RenderExtra,
 					      &m_Particles.m_RenderGeneral,
 					      &m_FreezeBars,
 					      &m_DamageInd,
+						  &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_UNDER_HUD],
 					      &m_Hud,
 					      &m_Spectator,
 					      &m_Emoticon,
@@ -148,17 +153,22 @@ void CGameClient::OnConsoleInit()
 					      &m_DebugHud,
 					      &m_Scoreboard,
 					      &m_Statboard,
+						  &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_ABOVE_HUD],
 					      &m_Motd,
 					      &m_Menus,
 					      &m_Tooltips,
+					      &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_ABOVE_MENUS],
 					      &CMenus::m_Binder,
 					      &m_GameConsole,
-					      &m_MenuBackground});
+					      &m_MenuBackground,
+						  &m_Lua, // doesn't render anything
+					      &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_LAST]});
 
 	// build the input stack
 	m_vpInput.insert(m_vpInput.end(), {&CMenus::m_Binder, // this will take over all input when we want to bind a key
 						  &m_Binds.m_SpecialBinds,
 						  &m_GameConsole,
+						  &m_Lua,
 						  &m_Chat, // chat has higher prio, due to that you can quit it by pressing esc
 						  &m_Motd, // for pressing esc to remove it
 						  &m_Spectator,
@@ -3769,7 +3779,7 @@ void CGameClient::RefreshSkins()
 
 	for(auto &Client : m_aClients)
 	{
-		Client.m_SkinInfo.Apply(m_Skins.Find(Client.m_aSkinName));
+			Client.m_SkinInfo.Apply(m_Skins.Find(Client.m_aSkinName));
 		Client.UpdateRenderInfo(IsTeamPlay());
 	}
 

@@ -59,6 +59,7 @@
 #include "components/statboard.h"
 #include "components/tooltips.h"
 #include "components/voting.h"
+#include "components/lua.h"
 
 class CGameInfo
 {
@@ -147,6 +148,7 @@ public:
 	CEmoticon m_Emoticon;
 	CDamageInd m_DamageInd;
 	CVoting m_Voting;
+	CLua m_Lua;
 	CSpectator m_Spectator;
 
 	CPlayers m_Players;
@@ -267,6 +269,7 @@ public:
 	class IEditor *Editor() { return m_pEditor; }
 	class IFriends *Friends() { return m_pFriends; }
 	class IFriends *Foes() { return m_pFoes; }
+	class CLua *Lua() { return &m_Lua; }
 #if defined(CONF_AUTOUPDATE)
 	class IUpdater *Updater()
 	{
