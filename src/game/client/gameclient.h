@@ -60,6 +60,7 @@
 #include "components/tooltips.h"
 #include "components/voting.h"
 #include "components/lua.h"
+#include "components/plugin_menager.h"
 
 class CGameInfo
 {
@@ -148,7 +149,6 @@ public:
 	CEmoticon m_Emoticon;
 	CDamageInd m_DamageInd;
 	CVoting m_Voting;
-	CLua m_Lua;
 	CSpectator m_Spectator;
 
 	CPlayers m_Players;
@@ -168,6 +168,9 @@ public:
 	CGhost m_Ghost;
 
 	CTooltips m_Tooltips;
+
+	CLua m_Lua;
+	CPluginMenager m_PluginMenager;
 
 private:
 	std::vector<class CComponent *> m_vpAll;

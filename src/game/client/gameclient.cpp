@@ -161,7 +161,8 @@ void CGameClient::OnConsoleInit()
 					      &CMenus::m_Binder,
 					      &m_GameConsole,
 					      &m_MenuBackground,
-						  &m_Lua, // doesn't render anything
+						  &m_Lua,
+						  &m_PluginMenager,
 					      &m_Lua.m_aRenderLayers[CLua::LUA_RENDER_LAYER_LAST]});
 
 	// build the input stack

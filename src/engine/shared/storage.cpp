@@ -110,6 +110,8 @@ public:
 #if defined(CONF_VIDEORECORDER)
 				CreateFolder("videos", TYPE_SAVE);
 #endif
+				CreateFolder("plugins", TYPE_SAVE);
+				CreateFolder("plugins_data", TYPE_SAVE);
 			}
 			CreateFolder("dumps", TYPE_SAVE);
 			CreateFolder("demos", TYPE_SAVE);
