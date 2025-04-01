@@ -511,7 +511,7 @@ CSaveTeam::~CSaveTeam()
 	delete[] m_pSavedTees;
 }
 
-ESaveResult CSaveTeam::Save(CGameContext *pGameServer, int Team, bool Dry, bool Force)
+ESaveResult CSaveTeam::Save(CGameContext *pGameServer, int Team, bool Dry, bool Force, int ExceptClientId)
 {
 	if(g_Config.m_SvTeam != SV_TEAM_FORCED_SOLO && (Team <= 0 || MAX_CLIENTS <= Team) && !Force)
 		return ESaveResult::TEAM_FLOCK;
@@ -524,7 +524,7 @@ ESaveResult CSaveTeam::Save(CGameContext *pGameServer, int Team, bool Dry, bool 
 		return ESaveResult::TEAM_0_MODE;
 	}
 
-	m_MembersCount = pTeams->Count(Team);
+	m_MembersCount = pTeams->Count(Team, ExceptClientId);
 	if(m_MembersCount <= 0)
 	{
 		return ESaveResult::TEAM_NOT_FOUND;
@@ -547,6 +547,8 @@ ESaveResult CSaveTeam::Save(CGameContext *pGameServer, int Team, bool Dry, bool 
 	CCharacter *p = (CCharacter *)pGameServer->m_World.FindFirst(CGameWorld::ENTTYPE_CHARACTER);
 	for(; p; p = (CCharacter *)p->TypeNext())
 	{
+		if(p->GetPlayer()->GetCid() == ExceptClientId)
+			continue;
 		if(pTeams->m_Core.Team(p->GetPlayer()->GetCid()) != Team)
 			continue;
 		if(m_MembersCount == j && !Force)

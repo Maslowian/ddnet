@@ -468,7 +468,7 @@ void CGameTeams::SetForceCharacterTeam(int ClientId, int Team)
 	}
 }
 
-int CGameTeams::Count(int Team) const
+int CGameTeams::Count(int Team, int ExceptClientId) const
 {
 	if(Team == TEAM_SUPER)
 		return -1;
@@ -476,7 +476,7 @@ int CGameTeams::Count(int Team) const
 	int Count = 0;
 
 	for(int i = 0; i < MAX_CLIENTS; ++i)
-		if(m_Core.Team(i) == Team)
+		if(m_Core.Team(i) == Team && i != ExceptClientId)
 			Count++;
 
 	return Count;
@@ -1316,21 +1316,16 @@ bool CGameTeams::TrySaveDyingTeam(int ClientId, int Weapon)
 	if(CurrTime < g_Config.m_SvUnkillMinTime)
 		return false;
 
+	int ExceptClientId = -1;
 	if(Weapon == WEAPON_WORLD)
-		m_Core.Team(ClientId, TEAM_FLOCK); // temporarily remove player from the team so he is not counted in team saving
+		ExceptClientId = ClientId;
 
-	if(Count(Team) > g_Config.m_SvMaxTeamSize)
-	{
-		if(Weapon == WEAPON_WORLD)
-			m_Core.Team(ClientId, Team);
+	int Count = this->Count(Team, ExceptClientId);
+	if(Count <= 0 || Count > g_Config.m_SvMaxTeamSize)
 		return false;
-	}
 
 	std::unique_ptr<CSaveTeam> SaveTeam = std::make_unique<CSaveTeam>();
-	ESaveResult Result = SaveTeam->Save(GameServer(), Team, true);
-
-	if(Weapon == WEAPON_WORLD)
-		m_Core.Team(ClientId, Team);
+	ESaveResult Result = SaveTeam->Save(GameServer(), Team, true, false, ExceptClientId);
 
 	if(Result == ESaveResult::SUCCESS)
 	{

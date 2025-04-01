@@ -174,7 +174,7 @@ public:
 	int FromString(const char *pString);
 	// returns true if a team can load, otherwise writes a nice error Message in pMessage
 	bool MatchPlayers(const char (*paNames)[MAX_NAME_LENGTH], const int *pClientId, int NumPlayer, char *pMessage, int MessageLen) const;
-	ESaveResult Save(CGameContext *pGameServer, int Team, bool Dry = false, bool Force = false);
+	ESaveResult Save(CGameContext *pGameServer, int Team, bool Dry = false, bool Force = false, int ExceptClientId = -1);
 	bool Load(CGameContext *pGameServer, int Team, bool KeepCurrentWeakStrong, bool IgnorePlayers = false);
 
 	CSaveTee *m_pSavedTees = nullptr;
